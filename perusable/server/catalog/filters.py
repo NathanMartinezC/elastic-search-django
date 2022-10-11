@@ -14,12 +14,7 @@ class WineFilterSet(FilterSet):
             Q(search_vector=SearchQuery(value))
         )
         return queryset.annotate(
-            search_vector=(
-                SearchVector('variety', weight='A') +
-                SearchVector('winery', weight='A') +
-                SearchVector('description', weight='B')
-            ),
-            search_rank=SearchVector(F('search_vector'), SearchQuery(value))
+            search_rank=SearchRank(F('search_vector'), SearchQuery(value))
         ).filter(search_query).order_by('-search_rank', 'id')
     
     class Meta:
